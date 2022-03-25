@@ -1,19 +1,22 @@
 {
-  "private": true,
   "name": "example-web-app",
   "description": "",
-  "license": "",
-  "dependencies": {
-    "@neobeach/core": "file:../"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
-  },
-  "engines": {
-    "node": ">=14"
-  },
+  "private": true,
+  "author": "User <user@example.com>",
+  "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development nodemon ./server.js",
     "start": "NODE_ENV=production node ./server.js"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "@neobeach/core": "file:../",
+    "@neobeach/middlewares-old-browser": "^1.0.0",
+    "@neobeach/middlewares-request-logger": "^1.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
   }
 }

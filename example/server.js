@@ -2,6 +2,8 @@
  * Import vendor modules
  */
 const {Runtime, Server} = require('@neobeach/core');
+const requestLogger = require('@neobeach/middlewares-request-logger');
+const oldBrowser = require('@neobeach/middlewares-old-browser');
 
 /**
  * Import own modules
@@ -16,7 +18,10 @@ const server = new Server();
 /**
  * Define global middlewares
  */
-const globalMiddleware = [];
+const globalMiddleware = [
+    requestLogger(),
+    oldBrowser()
+];
 
 /**
  * Define custom routers
