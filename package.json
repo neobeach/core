@@ -1,0 +1,24 @@
+{
+  "name": "@neobeach/core",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Glenn de Haan <glenn@dehaan.cloud>",
+  "contributors": [
+    "Colin van Eenige <cvaneenige@gmail.com>"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neobeach/core.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "deepmerge": "4.2.2",
+    "express": "4.17.1",
+    "js-logger": "^1.6.1",
+    "node-fetch": "2.6.7"
+  }
+}

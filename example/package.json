@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "name": "example-web-app",
+  "description": "",
+  "license": "",
+  "dependencies": {
+    "@neobeach/core": "file:../"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "dev": "NODE_ENV=development nodemon ./server.js",
+    "start": "NODE_ENV=production node ./server.js"
+  }
+}

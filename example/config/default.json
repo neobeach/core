@@ -1,0 +1,8 @@
+{
+  "application": {
+    "name": "example-web-app"
+  },
+  "logger": {
+    "level": "TRACE"
+  }
+}
