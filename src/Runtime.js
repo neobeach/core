@@ -74,23 +74,24 @@ const preflight = async () => {
     }
 
     // Check if package updates are available after we know we have internet
-    // if(internet) {
-    //     const core = await fetch('https://npmjs.com/@neobeach/core/');
-    //
-    //     if(core.status === 200) {
-    //         const coreJson = await core.json();
-    //         const npmVersion = coreJson['dist-tags']['latest'];
-    //
-    //         if(npmVersion !== packageInformation.version) {
-    //             console.log('\u001b[33m!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\u001b[0m');
-    //             console.log(' You are running an outdated version of the @neobeach/core package, Please update soon!');
-    //             console.log(` Current version: \u001b[33m${packageInformation.version}\u001b[0m`);
-    //             console.log(` Registry version: \u001b[32m${npmVersion}\u001b[0m`);
-    //             console.log('\u001b[33m!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\u001b[0m');
-    //             console.log('');
-    //         }
-    //     }
-    // }
+    if(internet) {
+        const core = await fetch('https://registry.npmjs.org/-/package/@neobeach/core/dist-tags');
+
+        if(core.status === 200) {
+            const coreJson = await core.json();
+            const npmVersion = coreJson.latest;
+
+            if(npmVersion !== packageInformation.version) {
+                console.log('\u001b[33m!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\u001b[0m');
+                console.log(' You are running an outdated version of the @neobeach/core package, Please update soon !');
+                console.log('');
+                console.log(` Installed version: \u001b[33m${packageInformation.version}\u001b[0m`);
+                console.log(` Available version: \u001b[32m${npmVersion}\u001b[0m`);
+                console.log('\u001b[33m!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\u001b[0m');
+                console.log('');
+            }
+        }
+    }
 }
 
 /**
