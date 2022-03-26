@@ -30,5 +30,4 @@ jobs:
           destination-github-username: 'neobeach'
           destination-repository-name: 'docs'
           user-email: glenn@dehaan.cloud
-          user-name: Glenn de Haan
           target-branch: master
