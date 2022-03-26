@@ -17,8 +17,8 @@
   },
   "scripts": {
     "madge": "madge -c ./",
-    "predocs": "rimraf ./out",
-    "docs": "jsdoc ./src"
+    "predocs": "rimraf ./docs",
+    "docs": "jsdoc ./src --configure jsdoc.json --verbose"
   },
   "dependencies": {
     "deepmerge": "4.2.2",
@@ -28,6 +28,7 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
+    "clean-jsdoc-theme": "^3.3.4",
     "jsdoc": "^3.6.10",
     "madge": "^5.0.1",
     "rimraf": "^3.0.2"

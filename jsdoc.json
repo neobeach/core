@@ -1,0 +1,42 @@
+{
+  "source": {
+    "include": ["README.md"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules/|docs)"
+  },
+  "plugins": ["plugins/markdown"],
+  "opts": {
+    "encoding": "utf8",
+    "readme": "./README.md",
+    "destination": "docs/",
+    "recurse": true,
+    "verbose": true,
+    "template": "./node_modules/clean-jsdoc-theme",
+    "theme_opts":{
+      "theme": "dark",
+      "title": "@neobeach/core",
+      "menu": [
+        {
+          "title": "GitHub",
+          "link": "https://github.com/neobeach/core",
+          "target": "_blank"
+        },
+        {
+          "title": "NPM",
+          "link": "https://npmjs.com/@neobeach/core",
+          "target": "_blank"
+        }
+      ],
+      "meta": [
+        {
+          "name": "author",
+          "content": "Glenn de Haan"
+        },
+        {
+          "name": "description",
+          "content": "Base web framework based on the popular ExpressJS package"
+        }
+      ]
+    }
+  }
+}
