@@ -1,72 +1,88 @@
 /**
  * Import vendor modules
+ * @ignore
  */
 const express = require('express');
 
 /**
  * Import own modules
+ * @ignore
  */
-const log = require('./Logger');
-const config = require('./Config');
+const Logger = require('./Logger');
+const Config = require('./Config');
 const Router = require('./Router');
+const Controller = require('./Controller');
 
-/**
- * Server class
- */
 class Server {
     /**
      * Setup an internal express app
      *
-     * @type {*|Express}
-     * @private
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {Express}
      */
     #app = express();
 
     /**
-     * Configure the express host
+     * Internal bind hostname reference for Express
      *
-     * @private
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {string}
      */
     #host;
 
     /**
-     * Configure the express port
+     * Internal bind port reference for Express
      *
-     * @private
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {number}
      */
     #port;
 
     /**
-     * Initialize the server
+     * Server class
+     *
+     * @class Server
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     * const Api = require('./routers/Api');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultBodyParsers();
+     *     server.loadRouters([Api]);
+     *     server.run();
+     * });
      */
     constructor() {
-        /**
-         * Set the host
-         *
-         * @type {number}
-         */
-        this.#host = config.application.host;
+        // Set the host and port
+        this.#host = Config.application.host;
+        this.#port = Config.application.port;
 
-        /**
-         * Set the port number
-         *
-         * @type {number}
-         */
-        this.#port = config.application.port;
-
-        /**
-         * Trust proxy
-         */
+        // Set the Express app to allow proxy's
         this.#app.enable('trust proxy');
 
-        /**
-         * Disable powered by header for security reasons
-         */
+        // Disable powered by header for security reasons
         this.#app.disable('x-powered-by');
 
-        /**
-         * Handle Google Cloud Loadbalancer requests (If the app try's to redirect from /)
-         */
+        // Handle Google Cloud Loadbalancer requests (If the app try's to redirect from /)
         this.#app.use((req, res, next) => {
             if (req.get('User-Agent') === 'GoogleHC/1.0') {
                 return res.send('Hello Google');
@@ -75,9 +91,7 @@ class Server {
             next();
         });
 
-        /**
-         * Expose core specific headers
-         */
+        // Expose library headers
         this.#app.use((req, res, next) => {
             const packageInformation = require(__dirname + '/../package.json');
             res.set('X-Neo-Beach', 'true');
@@ -88,23 +102,32 @@ class Server {
     }
 
     /**
-     * Start the server
+     * Starts the Express server
      *
-     * @returns {http.Server}
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @returns {function}
      */
     run() {
         return this.#app.listen(this.#port, this.#host, () => {
-            log.info(`[NODE] Service started with success! App running at: ${this.#host}:${this.#port}`)
+            Logger.info(`[NODE] Service started with success! App running at: ${this.#host}:${this.#port}`)
         });
     }
 
     /**
-     * Load middlewares into the Express app
+     * Load global middlewares into the Express app
      *
-     * @param middleware
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {array.<function(*, *, *)>} middleware - An array with Express middleware functions
      */
     loadMiddlewares(middleware) {
-        // global stuff like cors, body-parser, etc
         middleware.forEach(mw => {
             this.#app.use(mw);
         });
@@ -113,22 +136,39 @@ class Server {
     /**
      * Load routers into the Express app
      *
-     * @param routers
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {array} routers - An array with Routers
      */
     loadRouters(routers) {
         routers.forEach(router => {
-            if(router.prototype instanceof Router) {
-                const routerObj = new router();
-                const routes = routerObj.setControllers();
+            if(router instanceof Router) {
+                // Get Routes from Router
+                const routes = router.routes;
 
+                // Check if we have routes available
+                if(routes.length === 0) {
+                    Logger.warn(`[ROUTER] ${router.name} is initialized without routes!`);
+                }
+
+                // Loop over routes to initialize controllers
                 routes.forEach(route => {
-                    // Add all middlewares for every route
-                    for (const mw of route.middlewares) {
-                        this.#app.use(route.path, mw);
-                    }
+                    // Check if the controller extends our base controller
+                    if(route.controller instanceof Controller) {
+                        // Add all middlewares for every route
+                        for (const mw of route.middlewares) {
+                            this.#app.use(route.path, mw);
+                        }
 
-                    // Add the router from the controller
-                    this.#app.use(route.path, route.controller.setRoutes());
+                        // Add the router from the controller
+                        this.#app.use(route.path, route.controller.getRouter(router.name));
+                    } else {
+                        console.error('Error at line:', route);
+                        throw new Error(`Class is not an instance of '@neobeach/core/Controller'!`);
+                    }
                 });
             } else {
                 console.error('Error at line:', router);
@@ -138,7 +178,12 @@ class Server {
     }
 
     /**
-     * Includes default express body parsers (json, text and urlencoded) with recommended config
+     * Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
      */
     includeDefaultBodyParsers() {
         this.#app.use(express.json());
@@ -147,16 +192,21 @@ class Server {
     }
 
     /**
-     * Attach the remix build to our Express server
+     * Attach a Remix Framework build to our Express server
      *
-     * @param serverBuild
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {*} serverBuild - A Remix Server build
      */
-    attachRemix(serverBuild) {
-        const {createRequestHandler} = require("@remix-run/express");
+    loadRemixFramework(serverBuild) {
+        const {createRequestHandler} = require('@remix-run/express');
 
-        this.#app.use("/build", express.static(`${process.cwd()}/public/build`, { immutable: true, maxAge: "1y" }));
-        this.#app.use(express.static(`${process.cwd()}/public/build`, { maxAge: "1h" }));
-        this.#app.use(express.static(`${process.cwd()}/public`, { maxAge: "1h" }));
+        this.#app.use('/build', express.static(`${process.cwd()}/public/build`, { immutable: true, maxAge: '1y' }));
+        this.#app.use(express.static(`${process.cwd()}/public/build`, { maxAge: '1h' }));
+        this.#app.use(express.static(`${process.cwd()}/public`, { maxAge: '1h' }));
 
         this.#app.all('*', createRequestHandler({
             build: serverBuild,
@@ -167,5 +217,6 @@ class Server {
 
 /**
  * Export the server class
+ * @ignore
  */
 module.exports = Server;

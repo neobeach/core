@@ -1,67 +1,92 @@
-/**
- * Import vendor modules
- */
-const Logger = require('./Logger');
-const Controller = require('./Controller');
-
-/**
- * Router class
- */
 class Router {
     /**
-     * Array of objects which to implement
+     * Router name used for internal logs
      *
-     * @type {{}}
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {string}
+     */
+    name = '';
+
+    /**
+     * Array of routes which to implement within Express
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {array.<object>}
      */
     routes = [];
 
     /**
-     * Sets the routes with controllers
+     * Router class
      *
-     * @returns [{}]
+     * @class Router
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} name - Name of the Router
+     *
+     * @example
+     * const {Router} = require('@neobeach/core');
+     * const IndexController = require('./IndexController');
+     *
+     * const router = new Router('Api');
+     * router.add('/api', IndexController);
+     *
+     * module.exports = router;
      */
-    setControllers = () => {
-        // Check if we have routes available
-        if(this.routes.length === 0) {
-            Logger.warn('Router is initialized without routes!');
+    constructor(name) {
+        // Check if a name string is given
+        if(typeof name !== 'string' && name !== '') {
+            throw new Error(`A Router must be named. Got: ${name}`);
         }
 
-        // Array with objects that holds all initialized controllers
-        const controllers = [];
+        // Set the Router name
+        this.name = name;
+    }
 
-        // Loop over all routes
-        this.routes.forEach(route => {
-            // Check if a path string is given
-            if(typeof route.path !== "string") {
-                console.error('Error at line:', route);
-                throw new Error(`Route path is not a string! Got: ${JSON.stringify(route)}`);
-            }
+    /**
+     * Binds a controller to a path within an Express Router
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the controller to
+     * @param {*} controller - A Controller class reference
+     * @param {array.<function(*, *, *)>} [middlewares] - An array of middleware functions
+     */
+    add(path, controller, middlewares = []) {
+        // Check if a path string is given
+        if(typeof path !== 'string') {
+            throw new Error(`Route path is not a string! Got: ${path}`);
+        }
 
-            // Check if the object has a middleware array
-            if(!Array.isArray(route.middlewares)) {
-                console.error('Error at line:', route);
-                throw new Error(`Missing middleware array!`);
-            }
+        // Check if we have a middleware array
+        if(!Array.isArray(middlewares)) {
+            throw new Error(`Missing middleware array or invalid middleware array!`);
+        }
 
-            // Check if the controller extends our base controller
-            if(route.controller.prototype instanceof Controller) {
-                controllers.push({
-                    path: route.path,
-                    controller: new route.controller(),
-                    middlewares: route.middlewares
-                });
-            } else {
-                console.error('Error at line:', route);
-                throw new Error(`Class is not an instance of '@neobeach/core/Controller'!`);
-            }
+        // Add the route to routes array
+        this.routes.push({
+            path,
+            controller,
+            middlewares
         });
-
-        // Return all initialized controllers
-        return controllers;
     }
 }
 
 /**
  * Export the Router class
+ * @ignore
  */
 module.exports = Router;

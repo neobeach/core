@@ -4,27 +4,21 @@
 const {Controller, config} = require('@neobeach/core');
 
 /**
- * Api Index Controller
+ * Initialize new Controller
  */
-class IndexController extends Controller {
-    routes = [
-        {
-            path: '/',
-            method: this.methods.GET,
-            handler: this.handleApi,
-            middlewares: []
-        },
-        // Other routes...
-    ];
+const controller = new Controller('IndexController');
 
-    async handleApi(req, res) {
-        console.log('config', config);
-        res.json(1000, {
-           hello: 'world!'
-        });
-    }
+/**
+ * Add routes to controller
+ */
+controller.get('/', [], (req, res) => {
+    console.log('config', config);
+    res.json(1000, {
+        hello: 'world!'
+    });
+});
 
-    // Other handlers...
-}
-
-module.exports = IndexController;
+/**
+ * Exports the IndexController
+ */
+module.exports = controller;

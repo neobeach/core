@@ -1,15 +1,24 @@
 /**
  * Import base packages
+ * @ignore
  */
 const deepmerge = require('deepmerge');
 
 /**
  * Check if we are using the dev version
+ * @ignore
  */
 const dev = process.env.NODE_ENV !== 'production';
 
 /**
  * Define base config
+ *
+ * @access private
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
+ *
+ * @type {{application: {port: number, host: string, env: boolean}, logger: {level: string}}}
  */
 const baseConfig = {
     application: {
@@ -23,7 +32,15 @@ const baseConfig = {
 };
 
 /**
- * Builds the config and then returns it
+ * Builds/merges the config and then returns it as an array
+ *
+ * @module Config
+ * @access public
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
+ *
+ * @returns {object}
  */
 const Config = () => {
     try {
@@ -47,5 +64,6 @@ const Config = () => {
 
 /**
  * Export the config
+ * @ignore
  */
 module.exports = Config();

@@ -1,5 +1,6 @@
 /**
  * Import vendor modules
+ * @ignore
  */
 const os = require('os');
 const dns = require('dns').promises;
@@ -7,11 +8,17 @@ const fetch = require('node-fetch');
 
 /**
  * Import own modules
+ * @ignore
  */
 const Logger = require('./Logger');
 
 /**
  * Preflight function
+ *
+ * @access private
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
  */
 const preflight = async () => {
     const nodeVersionRequirement = 14;
@@ -95,42 +102,40 @@ const preflight = async () => {
 }
 
 /**
- * Created a user runtime/sandbox
+ * Creates a user runtime/sandbox that monitors a users code, and kills the process is necessary
+ *
+ * @module Runtime
+ * @access public
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
  *
  * @param {function} sandbox - A sandbox function that is monitored by the Runtime module
- * @constructor
  */
 const Runtime = async (sandbox) => {
-    /**
-     * Catch unhandled promise rejections
-     */
+    // Catch unhandled promise rejections
     process.on('unhandledRejection', err => {
         Logger.error('[RUNTIME] Unhandled Rejection found!:');
         Logger.error(err);
         process.exit(1);
     });
 
-    /**
-     * Catch unhandled exceptions
-     */
+    // Catch unhandled exceptions
     process.on('uncaughtException', err => {
         Logger.error('[RUNTIME] Uncaught Exception found!:');
         Logger.error(err);
         process.exit(1);
     });
 
-    /**
-     * Run Preflight
-     */
+    // Run the Runtime Preflight
     await preflight();
 
-    /**
-     * Start a users runtime
-     */
+    // Start a users runtime
     sandbox();
 }
 
 /**
  * Exports the Runtime module
+ * @ignore
  */
 module.exports = Runtime;

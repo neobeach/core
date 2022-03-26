@@ -1,58 +1,96 @@
 /**
  * Import vendor modules
+ * @ignore
  */
 const {Router} = require('express');
 
 /**
  * Import own modules
+ * @ignore
  */
 const Logger = require('./Logger');
 const Status = require('./Status');
 
-/**
- * Controller class
- */
 class Controller {
     /**
-     * Express router instance for mapping routes
+     * Controller name used for internal logs
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {string}
+     */
+    name = '';
+
+    /**
+     * Express router instance used by the Express server
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
      *
      * @type {Router}
      */
     router = Router();
 
     /**
-     * Array of objects which to implement into the router
+     * Array of routes which to implement within Express
      *
-     * @type {{}}
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @type {array.<object>}
      */
     routes = [];
 
     /**
-     * Router methods available
+     * Controller class
      *
-     * @type {Readonly<{HEAD: string, DELETE: string, PURGE: string, POST: string, GET: string, LOCK: string, COPY: string, OPTIONS: string, PUT: string, PATCH: string, UNLOCK: string}>}
+     * @class Controller
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} name - Name of the Controller
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.get('/', [], (req, res) => {
+     *     res.json(1000, {
+     *         hello: 'world!'
+     *     });
+     * });
      */
-    methods = Object.freeze({
-        GET: 'GET',
-        POST: 'POST',
-        PUT: 'PUT',
-        PATCH: 'PATCH',
-        DELETE: 'DELETE',
-        COPY: 'COPY',
-        HEAD: 'HEAD',
-        OPTIONS: 'OPTIONS',
-        PURGE: 'PURGE',
-        LOCK: 'LOCK',
-        UNLOCK: 'UNLOCK'
-    });
+    constructor(name) {
+        // Check if a name string is given
+        if(typeof name !== 'string' && name !== '') {
+            throw new Error(`A Controller must be named. Got: ${name}`);
+        }
+
+        // Set the Controller name
+        this.name = name;
+    }
 
     /**
-     * Handles all request handler responses
+     * Internal override functions of the Express Response Object
      *
-     * @param res
-     * @returns {{res, badRequest: badRequest, created: (function(): *), forbidden: forbidden, paymentRequired: paymentRequired, xml: xml, unauthorized: unauthorized, json: json, html: html, notFound: notFound, tooManyRequests: tooManyRequests, text: text, conflict: conflict}}
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param res - Express Response Object
+     * @return {{res, badRequest: badRequest, created: (function(): *), forbidden: forbidden, paymentRequired: paymentRequired, xml: xml, unauthorized: unauthorized, json: json, html: html, notFound: notFound, tooManyRequests: tooManyRequests, text: text, conflict: conflict}}
      */
-    response(res) {
+    #response(res) {
         return {
             res: res,
             text: (text) => {
@@ -109,90 +147,286 @@ class Controller {
     }
 
     /**
-     * Adds all routes from a controller to the router instance
+     * Add a new middleware to the Internal Controller's Express Router
      *
-     * @returns {Router}
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the middleware function to
+     * @param {function(*, *, *)} middleware - An Express middleware function
      */
-    setRoutes = () => {
+    #addMiddleware(path, middleware) {
+        this.router.use(path, middleware);
+    }
+
+    /**
+     * Add a new route to the Internal Controller's Express Router
+     *
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} method - The HTTP method used by Express
+     * @param {string} path - A path to bind the handler function to
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    #addRoute(method, path, handler) {
+        this.router[method](path, (req, res) => handler(req, this.#response(res)));
+    }
+
+    /**
+     * Add a new route and middlewares to the controller
+     *
+     * @access private
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} method - The HTTP method used by Express
+     * @param {string} path - A path to bind the handler function to
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     */
+    #add(method, path, handler, middlewares) {
+        // Check if we have a method string
+        if(typeof method !== "string") {
+            throw new Error(`Missing method string!`);
+        }
+
+        // Check if we have a path string
+        if(typeof path !== "string") {
+            throw new Error(`Missing path string!`);
+        }
+
+        // Check if we have a handler function
+        if(typeof handler !== "function") {
+            throw new Error(`Missing handler function!`);
+        }
+
+        // Check if we have a middleware array
+        if(!Array.isArray(middlewares)) {
+            throw new Error(`Missing middleware array!`);
+        }
+
+        // Add all middlewares to the controller
+        middlewares.forEach((middleware) => {
+            this.#addMiddleware(path, middleware);
+        });
+
+        // Add the route to the controller
+        this.#addRoute(method, path, handler);
+
+        // Add the route itself for reference to the routes array
+        this.routes.push({
+            path,
+            method,
+            handler,
+            middlewares
+        });
+    }
+
+    /**
+     * Get the internal Express Router
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} routerName - Parent Router name. Used to logging
+     */
+    getRouter(routerName) {
         // Check if we have routes available
         if(this.routes.length === 0) {
-            Logger.warn('Controller is initialized without routes!');
+            Logger.warn(`[CONTROLLER] ${routerName}/${this.name} is initialized without routes!`);
         }
 
-        // Set HTTP method, middleware, and handler for each route
-        // Returns Router object, which we will use in Server class
-        for (const route of this.routes) {
-            // Check if the object has a path string
-            if(typeof route.path !== "string") {
-                console.error('Error at line:', route);
-                throw new Error(`Missing path string!`);
-            }
-
-            // Check if the object has a handler function
-            if(typeof route.handler !== "function") {
-                console.error('Error at line:', route);
-                throw new Error(`Missing handler function!`);
-            }
-
-            // Check if the object has a middleware array
-            if(!Array.isArray(route.middlewares)) {
-                console.error('Error at line:', route);
-                throw new Error(`Missing middleware array!`);
-            }
-
-            // Add all middlewares for every route
-            for (const mw of route.middlewares) {
-                this.router.use(route.path, mw);
-            }
-
-            // Implement all route handlers
-            switch (route.method) {
-                case 'GET':
-                    this.router.get(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'POST':
-                    this.router.post(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'PUT':
-                    this.router.put(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'PATCH':
-                    this.router.patch(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'DELETE':
-                    this.router.delete(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'COPY':
-                    this.router.copy(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'HEAD':
-                    this.router.head(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'OPTIONS':
-                    this.router.options(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'PURGE':
-                    this.router.purge(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'LOCK':
-                    this.router.lock(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                case 'UNLOCK':
-                    this.router.unlock(route.path, (req, res) => route.handler(req, this.response(res)));
-                    break;
-                default:
-                    // Throw exception
-                    console.error('Error at line:', route);
-                    throw new Error(`Incorrect method supplied!`);
-            }
-        }
-
-        // Return router instance (will be usable in Server class)
+        // Return internal Express Router
         return this.router;
+    }
+
+    /**
+     * Add a GET route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    get(path, middlewares, handler) {
+        this.#add('get', path, handler, middlewares);
+    }
+
+    /**
+     * Add a POST route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    post(path, middlewares, handler) {
+        this.#add('post', path, handler, middlewares);
+    }
+
+    /**
+     * Add a PUT route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    put(path, middlewares, handler) {
+        this.#add('put', path, handler, middlewares);
+    }
+
+    /**
+     * Add a PATCH route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    patch(path, middlewares, handler) {
+        this.#add('patch', path, handler, middlewares);
+    }
+
+    /**
+     * Add a DELETE route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    delete(path, middlewares, handler) {
+        this.#add('delete', path, handler, middlewares);
+    }
+
+    /**
+     * Add a COPY route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    copy(path, middlewares, handler) {
+        this.#add('copy', path, handler, middlewares);
+    }
+
+    /**
+     * Add a HEAD route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    head(path, middlewares, handler) {
+        this.#add('head', path, handler, middlewares);
+    }
+
+    /**
+     * Add a OPTIONS route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    options(path, middlewares, handler) {
+        this.#add('options', path, handler, middlewares);
+    }
+
+    /**
+     * Add a PURGE route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    purge(path, middlewares, handler) {
+        this.#add('purge', path, handler, middlewares);
+    }
+
+    /**
+     * Add a LOCK route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    lock(path, middlewares, handler) {
+        this.#add('lock', path, handler, middlewares);
+    }
+
+    /**
+     * Add a UNLOCK route to the Controller
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} path - A path to bind the handler function to
+     * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
+     * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     */
+    unlock(path, middlewares, handler) {
+        this.#add('unlock', path, handler, middlewares);
     }
 }
 
 /**
  * Export the Controller class
+ * @ignore
  */
 module.exports = Controller;

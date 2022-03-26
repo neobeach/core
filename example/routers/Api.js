@@ -9,19 +9,16 @@ const {Router} = require('@neobeach/core');
 const IndexController = require('../controllers/IndexController');
 
 /**
- * Api router
+ * Initialize new Router
  */
-class Api extends Router {
-    routes = [
-        {
-            path: '/api',
-            controller: IndexController,
-            middlewares: []
-        }
-    ];
-}
+const router = new Router('Api');
+
+/**
+ * Add routes to router
+ */
+router.add('/api', IndexController);
 
 /**
  * Exports the Api router
  */
-module.exports = Api;
+module.exports = router;

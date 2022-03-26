@@ -1,13 +1,28 @@
 /**
+ * @typedef Logger
+ * @property {function(...*)} trace - Outputs a log within the trace, debug, info, warn and error log-level with stacktrace
+ * @property {function(...*)} debug - Outputs a log within the debug, info, warn and error log-levels
+ * @property {function(...*)} info - Outputs a log within the info, warn and error log-levels
+ * @property {function(...*)} warn - Outputs a log within the warn and error log-levels
+ * @property {function(...*)} error - Outputs a log within the error log-level
+ */
+
+/**
  * Import own modules
+ * @ignore
  */
 const config = require('./Config');
 
 /**
- * Creates the logger
+ * Creates an application logger
  *
- * @returns {{trace: function(...*), debug: function(...*), info: function(...*), warn: function(...*), error: function(...*)}}
- * @constructor
+ * @module Logger
+ * @access public
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
+ *
+ * @returns {Logger}
  */
 const Logger = () => {
     // Import the logger package
@@ -41,11 +56,6 @@ const Logger = () => {
 
 /**
  * Exports the default logger
- *
- * @property {function(...*)} trace - Outputs a log within the trace, debug, info, warn and error log-level with stacktrace
- * @property {function(...*)} debug - Outputs a log within the debug, info, warn and error log-levels
- * @property {function(...*)} info - Outputs a log within the info, warn and error log-levels
- * @property {function(...*)} warn - Outputs a log within the warn and error log-levels
- * @property {function(...*)} error - Outputs a log within the error log-level
+ * @ignore
  */
 module.exports = Logger();

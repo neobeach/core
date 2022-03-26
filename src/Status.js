@@ -1,7 +1,14 @@
 /**
  * Exports the status function for uniform Status codes
  *
- * @param code
+ * @module Status
+ * @access private
+ * @since 1.0.0
+ * @author Glenn de Haan
+ * @copyright MIT
+ *
+ * @param {number} code - A user given status code
+ *
  * @returns {{code, message: *}|{code, message: string}}
  */
 module.exports = (code) => {
