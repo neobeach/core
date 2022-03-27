@@ -113,7 +113,7 @@ class Server {
      */
     run() {
         return this.#app.listen(this.#port, this.#host, () => {
-            Logger.info(`[NODE] Service started with success! App running at: ${this.#host}:${this.#port}`)
+            Logger.info(`[SERVER] Service started with success! App running at: ${this.#host}:${this.#port}`)
         });
     }
 
@@ -125,12 +125,14 @@ class Server {
      * @author Glenn de Haan
      * @copyright MIT
      *
-     * @param {array.<function(*, *, *)>} middleware - An array with Express middleware functions
+     * @param {array.<function(*, *, *)>} middlewares - An array with Express middleware functions
      */
-    loadMiddlewares(middleware) {
-        middleware.forEach(mw => {
+    loadMiddlewares(middlewares) {
+        middlewares.forEach(mw => {
             this.#app.use(mw);
         });
+
+        Logger.info(`[SERVER] Loaded ${middlewares.length} global middleware(s)`);
     }
 
     /**
@@ -170,6 +172,8 @@ class Server {
                         throw new Error(`Class is not an instance of '@neobeach/core/Controller'!`);
                     }
                 });
+
+                Logger.info(`[SERVER] Loaded ${routes.length} router(s)`);
             } else {
                 console.error('Error at line:', router);
                 throw new Error(`Class is not an instance of '@neobeach/core/Router'!`);
@@ -189,6 +193,8 @@ class Server {
         this.#app.use(express.json());
         this.#app.use(express.text());
         this.#app.use(express.urlencoded({extended: false}));
+
+        Logger.info(`[SERVER] Loaded default body parsers (json, text and urlencoded)`);
     }
 
     /**
@@ -212,6 +218,8 @@ class Server {
             build: serverBuild,
             mode: process.env.NODE_ENV
         }));
+
+        Logger.info(`[SERVER] Loaded Remix Server Build`);
     }
 }
 
