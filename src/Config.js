@@ -24,7 +24,8 @@ const baseConfig = {
     application: {
         env: dev,
         host: '0.0.0.0',
-        port: 3000
+        port: 3000,
+        node: 14
     },
     logger: {
         level: 'DEBUG'

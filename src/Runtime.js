@@ -11,6 +11,7 @@ const fetch = require('node-fetch');
  * @ignore
  */
 const Logger = require('./Logger');
+const Config = require('./Config');
 
 /**
  * Preflight function
@@ -21,7 +22,7 @@ const Logger = require('./Logger');
  * @copyright MIT
  */
 const preflight = async () => {
-    const nodeVersionRequirement = 14;
+    const nodeVersionRequirement = Config.application.node;
     const nodeVersion = process.versions['node'];
     const packageInformation = require(__dirname + '/../package.json');
 
@@ -44,34 +45,36 @@ const preflight = async () => {
         }
     }
 
-    // Max char length for terminal
-    const maxLengthString = '---------------------------------------------------------------------------------';
-
-    // Define all base info without colors. Used for text output and char count
-    const coreVersionString =        `Core Version:         ${packageInformation.version}`;
-    const nodeVersionString =        `Node Version:         ${nodeVersion}`;
-    const hostString =               `Host:                 ${os.hostname()} (${os.cpus().length} Core(s) - ${(os.totalmem() / 1073741824).toFixed(2)} GB Memory)`;
-    const platformString =           `Platform:             ${process.platform} - ${os.release()} (${process.arch})`;
-    const internetString =           `Internet:             ${internet ? 'AVAILABLE' : 'NOT AVAILABLE'} - ${networks.join(',')}`;
-    const runtimeString =            `Runtime/Sandbox Init: SUCCESS`;
-
-    // Define all colored strings if needed. Only used to text output
-    const coreVersionStringColored = `Core Version:         \u001b[36m${packageInformation.version}\u001b[0m`;
-    const nodeVersionStringColored = `Node Version:         \u001b[32m${nodeVersion}\u001b[0m`;
-    const platformStringColored =    `Platform:             \u001b[33m${process.platform}\u001b[0m - ${os.release()} (${process.arch})`;
-    const internetStringColored =    `Internet:             ${internet ? '\u001b[32mAVAILABLE\u001b[0m' : '\u001b[31mNOT AVAILABLE\u001b[0m'} - ${networks.join(',')}`;
-    const runtimeStringColored =     `Runtime/Sandbox Init: \u001b[32mSUCCESS\u001b[0m`;
+    const seperator = '+--------------------------- @neobeach/core ---------------------------+';
+    const outputLines = [
+        {
+            text:  `Core Version: ${packageInformation.version}`,
+            color: `Core Version: \u001b[36m${packageInformation.version}\u001b[0m`
+        },
+        {
+            text:  `Node Version: ${nodeVersion}`,
+            color: `Node Version: \u001b[32m${nodeVersion}\u001b[0m`
+        },
+        {
+            text:  `Host:         ${os.hostname()} (${os.cpus().length} Core(s) - ${(os.totalmem() / 1073741824).toFixed(2)} GB Memory)`,
+            color: `Host:         ${os.hostname()} (${os.cpus().length} Core(s) - ${(os.totalmem() / 1073741824).toFixed(2)} GB Memory)`
+        },
+        {
+            text:  `Platform:     ${process.platform} - ${os.release()} (${process.arch})`,
+            color: `Platform:     \u001b[33m${process.platform}\u001b[0m - ${os.release()} (${process.arch})`
+        },
+        {
+            text:  `Internet:     ${internet ? 'AVAILABLE' : 'NOT AVAILABLE'} - ${networks.join(',')}`,
+            color: `Internet:     ${internet ? '\u001b[32mAVAILABLE\u001b[0m' : '\u001b[31mNOT AVAILABLE\u001b[0m'} - ${networks.join(',')}`
+        }
+    ];
 
     // Output preflight
-    console.log('+------------------------------------ Preflight ------------------------------------+');
-    console.log(`| ${coreVersionStringColored}${new Array((maxLengthString.length - coreVersionString.length) + 1).join(' ')} |`);
-    console.log(`| ${nodeVersionStringColored}${new Array((maxLengthString.length - nodeVersionString.length) + 1).join(' ')} |`);
-    console.log(`| ${hostString}${new Array((maxLengthString.length - hostString.length) + 1).join(' ')} |`);
-    console.log(`| ${platformStringColored}${new Array((maxLengthString.length - platformString.length) + 1).join(' ')} |`);
-    console.log(`| ${internetStringColored}${new Array((maxLengthString.length - internetString.length) + 1).join(' ')} |`);
-    console.log('+-----------------------------------------------------------------------------------+');
-    console.log(`| ${runtimeStringColored}${new Array((maxLengthString.length - runtimeString.length) + 1).join(' ')} |`);
-    console.log('+------------------------------------ Preflight ------------------------------------+');
+    console.log(seperator);
+    outputLines.forEach((line) => {
+        console.log(`| ${line.color}${new Array(((seperator.length - 4) - line.text.length) + 1).join(' ')} |`);
+    });
+    console.log(seperator);
     console.log('');
 
     // Check if the NodeJS version requirement is met
