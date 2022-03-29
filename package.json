@@ -1,7 +1,7 @@
 {
   "name": "@neobeach/core",
   "version": "0.0.0",
-  "description": "",
+  "description": "Base web framework based on the popular ExpressJS package",
   "main": "index.js",
   "author": "Glenn de Haan <glenn@dehaan.cloud>",
   "contributors": [
@@ -27,7 +27,6 @@
     "node-fetch": "2.6.7"
   },
   "devDependencies": {
-    "@types/express": "^4.17.13",
     "clean-jsdoc-theme": "^3.3.4",
     "jsdoc": "^3.6.10",
     "madge": "^5.0.1",

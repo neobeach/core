@@ -22,7 +22,18 @@ const config = require('./Config');
  * @author Glenn de Haan
  * @copyright MIT
  *
+ * @see https://www.npmjs.com/package/js-logger
+ *
  * @returns {Logger}
+ *
+ * @example
+ * const {Logger} = require('@neobeach/core');
+ *
+ * Logger.trace('Hello World');
+ * Logger.debug('Hello World');
+ * Logger.info('Hello World');
+ * Logger.warn('Hello World');
+ * Logger.error('Hello World');
  */
 const Logger = () => {
     // Import the logger package

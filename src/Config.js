@@ -41,7 +41,13 @@ const baseConfig = {
  * @author Glenn de Haan
  * @copyright MIT
  *
+ * @see https://www.npmjs.com/package/deepmerge
+ *
  * @returns {object}
+ *
+ * @example
+ * const {Config} = require('@neobeach/core');
+ * console.log('Config.application.port', Config.application.port);
  */
 const Config = () => {
     try {

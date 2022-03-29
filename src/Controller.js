@@ -237,6 +237,7 @@ class Controller {
      * @copyright MIT
      *
      * @param {string} routerName - Parent Router name. Used to logging
+     * @ignore
      */
     getRouter(routerName) {
         // Check if we have routes available
@@ -259,6 +260,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.get('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     get(path, middlewares, handler) {
         this.#add('get', path, handler, middlewares);
@@ -275,6 +284,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.post('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     post(path, middlewares, handler) {
         this.#add('post', path, handler, middlewares);
@@ -291,6 +308,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.put('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     put(path, middlewares, handler) {
         this.#add('put', path, handler, middlewares);
@@ -307,6 +332,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.patch('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     patch(path, middlewares, handler) {
         this.#add('patch', path, handler, middlewares);
@@ -323,6 +356,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.delete('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     delete(path, middlewares, handler) {
         this.#add('delete', path, handler, middlewares);
@@ -339,6 +380,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.copy('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     copy(path, middlewares, handler) {
         this.#add('copy', path, handler, middlewares);
@@ -355,6 +404,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.head('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     head(path, middlewares, handler) {
         this.#add('head', path, handler, middlewares);
@@ -371,6 +428,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.options('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     options(path, middlewares, handler) {
         this.#add('options', path, handler, middlewares);
@@ -387,6 +452,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.purge('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     purge(path, middlewares, handler) {
         this.#add('purge', path, handler, middlewares);
@@ -403,6 +476,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.lock('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     lock(path, middlewares, handler) {
         this.#add('lock', path, handler, middlewares);
@@ -419,6 +500,14 @@ class Controller {
      * @param {string} path - A path to bind the handler function to
      * @param {array.<function(*, *, *)>} middlewares - An array of Middlewares
      * @param {function(*, *)} handler - A handler function that handles the incoming HTTP request
+     *
+     * @example
+     * const {Controller} = require('@neobeach/core');
+     * const controller = new Controller('IndexController');
+     *
+     * controller.unlock('/', [], (req, res) => {
+     *     // Custom handler code here
+     * });
      */
     unlock(path, middlewares, handler) {
         this.#add('unlock', path, handler, middlewares);

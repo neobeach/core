@@ -114,6 +114,13 @@ const preflight = async () => {
  * @copyright MIT
  *
  * @param {function} sandbox - A sandbox function that is monitored by the Runtime module
+ * @example
+ * const {Runtime, Server} = require('@neobeach/core');
+ *
+ * Runtime(() => {
+ *    // Include your own code here
+ *    server.run();
+ * });
  */
 const Runtime = async (sandbox) => {
     // Catch unhandled promise rejections

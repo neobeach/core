@@ -59,6 +59,8 @@ class Server {
      * @author Glenn de Haan
      * @copyright MIT
      *
+     * @see https://www.npmjs.com/package/express
+     *
      * @example
      * const {Runtime, Server} = require('@neobeach/core');
      * const Api = require('./routers/Api');
@@ -110,6 +112,16 @@ class Server {
      * @copyright MIT
      *
      * @returns {function}
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     * const Api = require('./routers/Api');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.run();
+     * });
      */
     run() {
         return this.#app.listen(this.#port, this.#host, () => {
@@ -125,7 +137,24 @@ class Server {
      * @author Glenn de Haan
      * @copyright MIT
      *
+     * @see http://expressjs.com/en/guide/writing-middleware.html
+     *
      * @param {array.<function(*, *, *)>} middlewares - An array with Express middleware functions
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *    server.loadMiddlewares([
+     *        (req, res, next) => {
+     *            // Execute custom code here
+     *            next();
+     *        }
+     *    ]);
+     *    server.run();
+     * });
      */
     loadMiddlewares(middlewares) {
         middlewares.forEach(mw => {
@@ -144,6 +173,17 @@ class Server {
      * @copyright MIT
      *
      * @param {array} routers - An array with Routers
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     * const Api = require('./routers/Api');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.loadRouters([Api]);
+     *     server.run();
+     * });
      */
     loadRouters(routers) {
         routers.forEach(router => {
@@ -188,6 +228,20 @@ class Server {
      * @since 1.0.0
      * @author Glenn de Haan
      * @copyright MIT
+     *
+     * @see https://expressjs.com/en/api.html#express.json
+     * @see https://expressjs.com/en/api.html#express.text
+     * @see https://expressjs.com/en/api.html#express.urlencoded
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultBodyParsers();
+     *     server.run();
+     * });
      */
     includeDefaultBodyParsers() {
         this.#app.use(express.json());
@@ -205,7 +259,22 @@ class Server {
      * @author Glenn de Haan
      * @copyright MIT
      *
+     * @see https://remix.run/docs/en/v1
+     * @see https://remix.run/docs/en/v1/other-api/adapter
+     *
      * @param {*} serverBuild - A Remix Server build
+     *
+     * @example
+     * import * as serverBuild from "@remix-run/dev/server-build";
+     *
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.loadRemixFramework(serverBuild);
+     *     server.run();
+     * });
      */
     loadRemixFramework(serverBuild) {
         const {createRequestHandler} = require('@remix-run/express');

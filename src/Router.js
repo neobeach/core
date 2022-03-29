@@ -64,6 +64,15 @@ class Router {
      * @param {string} path - A path to bind the controller to
      * @param {*} controller - A Controller class reference
      * @param {array.<function(*, *, *)>} [middlewares] - An array of middleware functions
+     *
+     * @example
+     * const {Router} = require('@neobeach/core');
+     * const IndexController = require('./IndexController');
+     *
+     * const router = new Router('Api');
+     * router.add('/api', IndexController);
+     *
+     * module.exports = router;
      */
     add(path, controller, middlewares = []) {
         // Check if a path string is given
