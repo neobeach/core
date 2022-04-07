@@ -1,0 +1,20 @@
+# PhpStorm
+.idea
+
+# General files
+*~
+*.DS_STORE
+
+# Dependencies
+node_modules
+
+# Docs
+docs
+
+# Example
+example
+
+# Misc files
+.github
+jsdoc.json
+.editorconfig
