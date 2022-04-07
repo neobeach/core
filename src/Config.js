@@ -11,6 +11,13 @@ const deepmerge = require('deepmerge');
 const dev = process.env.NODE_ENV !== 'production';
 
 /**
+ * Optional config directory for project who have a deeper config dir stacking
+ * @type {string}
+ * @ignore
+ */
+const configDir = process.env.CONFIG_DIR || '';
+
+/**
  * Define base config
  *
  * @access private
@@ -54,16 +61,12 @@ const Config = () => {
         return deepmerge(
             baseConfig,
             deepmerge(
-                require(dev ? process.cwd() + '/config/default.json' : process.cwd() + '/build/default.json'),
-                eval('require')(dev ? process.cwd() + '/config/config.json' : process.cwd() + '/build/config.json')
+                require(dev ? process.cwd() + configDir + '/config/default.json' : process.cwd() + configDir + '/build/default.json'),
+                eval('require')(dev ? process.cwd() + configDir + '/config/config.json' : process.cwd() + configDir + '/build/config.json')
             )
         );
     } catch (e) {
-        console.error(
-            `[CONFIG] Does not exist! Location: ${
-                dev ? process.cwd() + '/config/config.json' : process.cwd() + '/config.json'
-            }`
-        );
+        console.error(`[CONFIG] Unable to load!`);
         console.error(e);
         process.exit(1);
     }
