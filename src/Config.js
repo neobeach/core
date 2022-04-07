@@ -15,7 +15,7 @@ const dev = process.env.NODE_ENV !== 'production';
  * @type {string}
  * @ignore
  */
-const configDir = process.env.CONFIG_DIR || '';
+const configDir = process.env.CONFIG_DIR || '/config/';
 
 /**
  * Define base config
@@ -61,8 +61,8 @@ const Config = () => {
         return deepmerge(
             baseConfig,
             deepmerge(
-                require(dev ? process.cwd() + configDir + '/config/default.json' : process.cwd() + configDir + '/build/default.json'),
-                eval('require')(dev ? process.cwd() + configDir + '/config/config.json' : process.cwd() + configDir + '/build/config.json')
+                require(dev ? process.cwd() + configDir + 'default.json' : process.cwd() + configDir + '/build/default.json'),
+                eval('require')(dev ? process.cwd() + configDir + '/config.json' : process.cwd() + configDir + '/build/config.json')
             )
         );
     } catch (e) {
