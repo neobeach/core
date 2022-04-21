@@ -17,14 +17,26 @@
       "title": "@neobeach/core",
       "menu": [
         {
-          "title": "GitHub",
+          "title": "@neobeach/core - GitHub",
           "link": "https://github.com/neobeach/core",
           "target": "_blank"
         },
         {
-          "title": "NPM",
+          "title": "@neobeach/core - NPM",
           "link": "https://npmjs.com/@neobeach/core",
           "target": "_blank"
+        },
+        {
+          "title": "Core - Documentation",
+          "link": "https://neobeach.dev/core/"
+        },
+        {
+          "title": "Middlewares - Documentation",
+          "link": "https://neobeach.dev/middlewares/"
+        },
+        {
+          "title": "Modules - Documentation",
+          "link": "https://neobeach.dev/modules/"
         }
       ],
       "meta": [
