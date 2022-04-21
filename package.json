@@ -13,7 +13,7 @@
     "url": "https://github.com/neobeach/core.git"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0"
   },
   "scripts": {
     "madge": "madge -c ./",
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "deepmerge": "4.2.2",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "js-logger": "^1.6.1",
     "node-fetch": "2.6.7"
   },

@@ -25,14 +25,14 @@ const configDir = process.env.CONFIG_DIR || '/config/';
  * @author Glenn de Haan
  * @copyright MIT
  *
- * @type {{application: {port: number, host: string, env: boolean}, logger: {level: string}}}
+ * @type {{application: {node: number, port: number, host: string, env: boolean}, logger: {level: string}}}
  */
 const baseConfig = {
     application: {
         env: dev,
         host: '0.0.0.0',
         port: 3000,
-        node: 14
+        node: 16
     },
     logger: {
         level: 'DEBUG'

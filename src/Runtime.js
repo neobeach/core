@@ -45,7 +45,7 @@ const preflight = async () => {
         }
     }
 
-    const seperator = '+--------------------------- @neobeach/core ---------------------------+';
+    const seperator = '+----------------------------------------- @neobeach/core -----------------------------------------+';
     const outputLines = [
         {
             text:  `Core Version: ${packageInformation.version}`,
