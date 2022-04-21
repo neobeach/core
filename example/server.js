@@ -34,6 +34,8 @@ const routers = [
  * Create a runtime/sandbox to start the server in
  */
 Runtime(() => {
+    server.includeDefaultSecurityHeaders();
+    server.includeDefaultCompression();
     server.includeDefaultBodyParsers();
     server.loadMiddlewares(globalMiddleware);
     server.loadRouters(routers);

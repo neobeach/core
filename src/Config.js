@@ -35,7 +35,7 @@ const baseConfig = {
         node: 16
     },
     logger: {
-        level: 'DEBUG'
+        level: 'TRACE'
     }
 };
 

@@ -2,6 +2,7 @@
  * Import vendor modules
  * @ignore
  */
+const os = require('os');
 const express = require('express');
 
 /**
@@ -98,6 +99,26 @@ class Server {
             const packageInformation = require(__dirname + '/../package.json');
             res.set('X-Neo-Beach', 'true');
             res.set('X-Neo-Beach-Core', packageInformation.version);
+
+            next();
+        });
+
+        // Expose a health check
+        this.#app.use((req, res, next) => {
+            if(req.originalUrl === '/_health') {
+                const packageInformation = require(__dirname + '/../package.json');
+
+                res.json({
+                    status: 'UP',
+                    host: os.hostname(),
+                    core: packageInformation.version,
+                    load: process.cpuUsage(),
+                    mem: process.memoryUsage(),
+                    uptime: process.uptime()
+                });
+
+                return;
+            }
 
             next();
         });
@@ -249,6 +270,97 @@ class Server {
         this.#app.use(express.urlencoded({extended: false}));
 
         Logger.info(`[SERVER] Loaded default body parsers (json, text and urlencoded)`);
+    }
+
+    /**
+     * Includes/loads default security headers with recommended config into the Express app
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @see https://www.npmjs.com/package/helmet
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultSecurityHeaders();
+     *     server.run();
+     * });
+     */
+    includeDefaultSecurityHeaders() {
+        const helmet = require('helmet');
+
+        this.#app.use(helmet());
+
+        Logger.info(`[SERVER] Loaded default security headers`);
+    }
+
+    /**
+     * Includes/loads default CORS headers with recommended config into the Express app
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @see https://www.npmjs.com/package/cors
+     *
+     * @param {String} origin - String with allowed origin URL's
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultCorsHeaders();
+     *     server.run();
+     * });
+     */
+    includeDefaultCorsHeaders(origin) {
+        const cors = require('cors');
+
+        this.#app.use(cors({
+            origin
+        }));
+
+        Logger.info(`[SERVER] Loaded default CORS headers`);
+    }
+
+    /**
+     * Includes/loads default compression (deflate, gzip) with recommended config into the Express app
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @see https://www.npmjs.com/package/compression
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultCompression();
+     *     server.run();
+     * });
+     */
+    includeDefaultCompression() {
+        const compression = require('compression');
+
+        this.#app.use(compression({
+            threshold: 0
+        }));
+
+        Logger.info(`[SERVER] Loaded default compression (deflate, gzip)`);
+        Logger.warn(`[SERVER] !!! Please note: We recommend you to disable compression on production environments. Loadbalancers and reverse proxies are 9/10 times faster at doing this job... !!!`);
     }
 
     /**
