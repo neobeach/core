@@ -1,6 +1,6 @@
 {
   "name": "@neobeach/core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Base web framework based on the popular ExpressJS package",
   "main": "index.js",
   "author": "Glenn de Haan <glenn@dehaan.cloud>",
@@ -12,6 +12,7 @@
     "type": "git",
     "url": "https://github.com/neobeach/core.git"
   },
+  "sideEffects": false,
   "engines": {
     "node": ">=16.0.0"
   },
