@@ -1,6 +1,6 @@
 {
   "name": "@neobeach/core",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Base web framework based on the popular ExpressJS package",
   "main": "index.js",
   "author": "Glenn de Haan <glenn@dehaan.cloud>",

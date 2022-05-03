@@ -75,6 +75,9 @@ class Server {
      * });
      */
     constructor() {
+        // Log server start
+        Logger.info('[SERVER] App starting...');
+
         // Set the host and port
         this.#host = Config.application.host;
         this.#port = Config.application.port;

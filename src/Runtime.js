@@ -70,6 +70,7 @@ const preflight = async () => {
     ];
 
     // Output preflight
+    console.log('');
     console.log(seperator);
     outputLines.forEach((line) => {
         console.log(`| ${line.color}${new Array(((seperator.length - 4) - line.text.length) + 1).join(' ')} |`);

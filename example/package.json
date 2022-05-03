@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@neobeach/core": "file:../",
-    "@neobeach/middlewares-old-browser": "^1.0.1",
-    "@neobeach/middlewares-request-logger": "^1.1.2"
+    "@neobeach/middlewares-old-browser": "^1.0.5",
+    "@neobeach/middlewares-request-logger": "^1.1.5"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
