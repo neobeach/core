@@ -246,7 +246,7 @@ class Server {
     }
 
     /**
-     * Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
+     * Includes/loads default express body parsers (json and text) with recommended config into the Express app
      *
      * @access public
      * @since 1.0.0
@@ -255,7 +255,6 @@ class Server {
      *
      * @see https://expressjs.com/en/api.html#express.json
      * @see https://expressjs.com/en/api.html#express.text
-     * @see https://expressjs.com/en/api.html#express.urlencoded
      *
      * @example
      * const {Runtime, Server} = require('@neobeach/core');
@@ -270,9 +269,8 @@ class Server {
     includeDefaultBodyParsers() {
         this.#app.use(express.json());
         this.#app.use(express.text());
-        this.#app.use(express.urlencoded({extended: false}));
 
-        Logger.info(`[SERVER] Loaded default body parsers (json, text and urlencoded)`);
+        Logger.info(`[SERVER] Loaded default body parsers (json and text)`);
     }
 
     /**
