@@ -147,6 +147,7 @@ Below is an overview of all main Server/Core functions:
 ```javascript
 server.loadMiddlewares(middlewares);    // Load global middlewares into the Express app
 server.loadRouters(routers);            // Load routers into the Express app
+server.setParameter(name, value);       // Sets an express app parameter
 
 server.includeDefaultBodyParsers();     // Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
 server.includeDefaultSecurityHeaders(); // Includes/loads default security headers with recommended config into the Express app

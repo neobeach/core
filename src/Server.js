@@ -246,6 +246,35 @@ class Server {
     }
 
     /**
+     * Sets an express app parameter
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} name - An express parameter name
+     * @param {*} value - You specified value for the parameter
+     *
+     * @see https://expressjs.com/en/4x/api.html#app.set
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.setParameter('view engine', 'ejs');
+     *     server.run();
+     * });
+     */
+    setParameter(name, value) {
+        this.#app.set(name, value);
+
+        Logger.info(`[SERVER] Setting the express parameter ${name}: ${JSON.stringify(value)}`);
+    }
+
+    /**
      * Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
      *
      * @access public
