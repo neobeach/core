@@ -246,7 +246,40 @@ class Server {
     }
 
     /**
-     * Sets an express app parameter
+     * Serves a static directory from the Express app
+     *
+     * @access public
+     * @since 1.0.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} directory - Local directory path where the static files live
+     * @param {string} [prefix] - Optional prefix to create a virtual path
+     *
+     * @see https://expressjs.com/en/starter/static-files.html
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.loadStatic('public');
+     *     server.run();
+     * });
+     */
+    loadStatic(directory, prefix = '/') {
+        if(prefix === '/') {
+            this.#app.use(express.static(directory));
+        } else {
+            this.#app.use(prefix, express.static(directory));
+        }
+
+        Logger.info(`[SERVER] Serving static files on / from: ${directory}`);
+    }
+
+    /**
+     * Sets an Express app parameter
      *
      * @access public
      * @since 1.0.0
