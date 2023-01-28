@@ -5,6 +5,10 @@
     "excludePattern": "(node_modules/|docs)"
   },
   "plugins": ["plugins/markdown"],
+  "markdown": {
+    "hardwrap": false,
+    "idInHeadings": true
+  },
   "opts": {
     "encoding": "utf8",
     "readme": "./README.md",
@@ -12,31 +16,31 @@
     "recurse": true,
     "verbose": true,
     "template": "./node_modules/clean-jsdoc-theme",
-    "theme_opts":{
-      "theme": "dark",
+    "theme_opts": {
+      "default_theme": "dark",
       "title": "@neobeach/core",
       "menu": [
         {
-          "title": "@neobeach/core - GitHub",
+          "title": "Core",
+          "link": "https://neobeach.dev/core/"
+        },
+        {
+          "title": "Middlewares",
+          "link": "https://neobeach.dev/middlewares/"
+        },
+        {
+          "title": "Modules",
+          "link": "https://neobeach.dev/modules/"
+        },
+        {
+          "title": "GitHub",
           "link": "https://github.com/neobeach/core",
           "target": "_blank"
         },
         {
-          "title": "@neobeach/core - NPM",
+          "title": "NPM",
           "link": "https://npmjs.com/@neobeach/core",
           "target": "_blank"
-        },
-        {
-          "title": "Core - Documentation",
-          "link": "https://neobeach.dev/core/"
-        },
-        {
-          "title": "Middlewares - Documentation",
-          "link": "https://neobeach.dev/middlewares/"
-        },
-        {
-          "title": "Modules - Documentation",
-          "link": "https://neobeach.dev/modules/"
         }
       ],
       "meta": [

@@ -9,14 +9,14 @@
     "start": "NODE_ENV=production node ./server.js"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18.0.0"
   },
   "dependencies": {
     "@neobeach/core": "file:../",
-    "@neobeach/middlewares-old-browser": "^1.0.5",
-    "@neobeach/middlewares-request-logger": "^1.1.5"
+    "@neobeach/middlewares-old-browser": "2.0.0",
+    "@neobeach/middlewares-request-logger": "2.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.15"
+    "nodemon": "2.0.20"
   }
 }
