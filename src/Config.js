@@ -32,7 +32,7 @@ const baseConfig = {
         env: dev,
         host: '0.0.0.0',
         port: 3000,
-        node: 16
+        node: 18
     },
     logger: {
         level: 'TRACE'
