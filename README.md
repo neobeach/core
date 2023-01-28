@@ -34,17 +34,17 @@ example/                 <-- Project Root
 ## Versions
 The current version of the core is build/tested on the following dependency versions:
 ```text
-node: "16.14.2"
+node: "18.13.0"
 npm: "8.5.0"
 
 @remix-run/express: "1.3.4"
 compression: "1.7.4"
 cors: "2.8.5"
 deepmerge: "4.2.2"
-express: "4.17.3"
-helmet: "5.0.2"
+express: "4.18.2"
+helmet: "6.0.1"
 js-logger: "1.6.1"
-node-fetch: "2.6.7"
+node-fetch: "2.6.8"
 ```
 
 ## Config
