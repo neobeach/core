@@ -88,11 +88,14 @@ class Controller {
      * @copyright MIT
      *
      * @param res - Express Response Object
-     * @return {{res, badRequest: badRequest, created: (function(): *), forbidden: forbidden, paymentRequired: paymentRequired, xml: xml, unauthorized: unauthorized, json: json, html: html, notFound: notFound, tooManyRequests: tooManyRequests, text: text, conflict: conflict}}
+     * @return {{res, badRequest: badRequest, created: (function(): *), forbidden: forbidden, paymentRequired: paymentRequired, xml: xml, unauthorized: unauthorized, json: json, html: html, notFound: notFound, tooManyRequests: tooManyRequests, text: text, render: render, conflict: conflict}}
      */
     #response(res) {
         return {
             res: res,
+            render: (view, params = {}) => {
+                res.render(view, params);
+            },
             text: (text) => {
                 res.set('Content-Type', 'text/plain');
                 res.status(200).send(text);

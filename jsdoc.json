@@ -19,6 +19,9 @@
     "theme_opts": {
       "default_theme": "dark",
       "title": "@neobeach/core",
+      "homepageTitle": "@neobeach/core: Home",
+      "favicon": "_resources/images/logo.png",
+      "static_dir": ["./_resources"],
       "menu": [
         {
           "title": "Core",
