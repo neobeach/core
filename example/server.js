@@ -37,6 +37,8 @@ Runtime(() => {
     server.includeDefaultSecurityHeaders();
     server.includeDefaultCompression();
     server.includeDefaultBodyParsers();
+    server.includeDefaultCookieParser();
+    server.setEJSViewEngine(`${__dirname}/views`);
     server.loadMiddlewares(globalMiddleware);
     server.loadRouters(routers);
     server.run();

@@ -39,11 +39,14 @@ npm: "8.5.0"
 
 @remix-run/express: "1.3.4"
 compression: "1.7.4"
+cookie-parser: "1.4.6"
 cors: "2.8.5"
 deepmerge: "4.2.2"
+ejs: "3.1.8"
 express: "4.18.2"
 helmet: "6.0.1"
 js-logger: "1.6.1"
+multer: "1.4.5-lts.1"
 node-fetch: "2.6.8"
 ```
 
@@ -150,11 +153,13 @@ server.loadRouters(routers);            // Load routers into the Express app
 server.loadStatic(directory, prefix);   // Serves a static directory from the Express app
 
 server.setParameter(name, value);       // Sets an Express app parameter
+server.setEJSViewEngine(views);         // Sets the Express render engine to EJS
 
-server.includeDefaultBodyParsers();     // Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
+server.includeDefaultBodyParsers();     // Includes/loads default express body parsers (json, text, urlencoded and multer) with recommended config into the Express app
 server.includeDefaultSecurityHeaders(); // Includes/loads default security headers with recommended config into the Express app
 server.includeDefaultCorsHeaders();     // Includes/loads default CORS headers with recommended config into the Express app
 server.includeDefaultCompression();     // Includes/loads default compression (deflate, gzip) with recommended config into the Express app
+server.includeDefaultCookieParser();    // Includes/loads cookie parser with recommended config into the Express app
 
 server.loadRemixFramework(serverBuild); // Attach a Remix Framework build to our Express server
 

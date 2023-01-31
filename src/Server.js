@@ -297,7 +297,7 @@ class Server {
      * const server = new Server();
      *
      * Runtime(() => {
-     *     server.setParameter('view engine', 'ejs');
+     *     server.setParameter('title', 'My Site');
      *     server.run();
      * });
      */
@@ -308,7 +308,37 @@ class Server {
     }
 
     /**
-     * Includes/loads default express body parsers (json, text and urlencoded) with recommended config into the Express app
+     * Sets the Express render engine to EJS
+     *
+     * @access public
+     * @since 2.1.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @param {string} views - Path to the EJS views directory
+     *
+     * @see https://expressjs.com/en/guide/using-template-engines.html
+     * @see https://ejs.co/
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.setEJSViewEngine(`${__dirname}/views`);
+     *     server.run();
+     * });
+     */
+    setEJSViewEngine(views) {
+        this.#app.set('view engine', 'ejs');
+        this.#app.set('views', views);
+
+        Logger.info(`[SERVER] Enabling EJS as render engine, views directory: ${views}`);
+    }
+
+    /**
+     * Includes/loads default express body parsers (json, text, urlencoded and multer) with recommended config into the Express app
      *
      * @access public
      * @since 1.0.0
@@ -318,6 +348,7 @@ class Server {
      * @see https://expressjs.com/en/api.html#express.json
      * @see https://expressjs.com/en/api.html#express.text
      * @see https://expressjs.com/en/api.html#express.urlencoded
+     * @see https://github.com/expressjs/multer
      *
      * @example
      * const {Runtime, Server} = require('@neobeach/core');
@@ -330,11 +361,14 @@ class Server {
      * });
      */
     includeDefaultBodyParsers() {
+        const multer = require('multer');
+
         this.#app.use(express.json());
         this.#app.use(express.text());
         this.#app.use(express.urlencoded({extended: false}));
+        this.#app.use(multer().none());
 
-        Logger.info(`[SERVER] Loaded default body parsers (json, text and urlencoded)`);
+        Logger.info(`[SERVER] Loaded default body parsers (json, text, urlencoded and multer)`);
     }
 
     /**
@@ -426,6 +460,34 @@ class Server {
 
         Logger.info(`[SERVER] Loaded default compression (deflate, gzip)`);
         Logger.warn(`[SERVER] !!! Please note: We recommend you to disable compression on production environments. Loadbalancers and reverse proxies are 9/10 times faster at doing this job... !!!`);
+    }
+
+    /**
+     * Includes/loads cookie parser with recommended config into the Express app
+     *
+     * @access public
+     * @since 2.1.0
+     * @author Glenn de Haan
+     * @copyright MIT
+     *
+     * @see https://github.com/expressjs/cookie-parser
+     *
+     * @example
+     * const {Runtime, Server} = require('@neobeach/core');
+     *
+     * const server = new Server();
+     *
+     * Runtime(() => {
+     *     server.includeDefaultCookieParser();
+     *     server.run();
+     * });
+     */
+    includeDefaultCookieParser() {
+        const cookieParser = require('cookie-parser');
+
+        this.#app.use(cookieParser());
+
+        Logger.info(`[SERVER] Loaded default cookie parser`);
     }
 
     /**
