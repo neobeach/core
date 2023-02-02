@@ -5,7 +5,7 @@
   "author": "User <user@example.com>",
   "license": "MIT",
   "scripts": {
-    "dev": "SKIP_UPGRADE_CHECK=true NODE_ENV=development nodemon --watch ../ ./server.js",
+    "dev": "NODE_ENV=development nodemon --watch ../ ./server.js",
     "start": "NODE_ENV=production node ./server.js"
   },
   "engines": {
