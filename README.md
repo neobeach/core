@@ -24,6 +24,8 @@ example/                 <-- Project Root
       IndexController.js <-- Contains all Index/Home handlers for the Web controller (Optional)
   middlewares/           <-- Contains all application Middlewares  (Optional, Technically you can store them everywhere but we do recommend creating a folder for it)
     RequestLogger.js     <-- This file exports a simple Express middleware (Optional)
+  models/                <-- Contains all application Sequelize ORM Models (Optional)
+    User.js              <-- Contains the User model for the Sequelize ORM (Example)
   routers/               <-- Contains all application Routers (Optional, Technically you can store them everywhere but we do recommend creating a folder for it)
     Api.js               <-- Contains all Api routes and references Controllers to handle a specific sub-path (Optional)
     Web.js               <-- Contains all Web routes and references Controllers to handle a specific sub-path (Optional)
@@ -32,7 +34,7 @@ example/                 <-- Project Root
 ```
 
 ## Versions
-The current version of the core is build/tested on the following dependency versions:
+The current version of the Core is build/tested on the following dependency versions:
 ```text
 node: "18.13.0"
 npm: "8.5.0"
@@ -48,6 +50,8 @@ helmet: "6.0.1"
 js-logger: "1.6.1"
 multer: "1.4.5-lts.1"
 node-fetch: "2.6.8"
+sequelize: "6.28.0"
+sqlite3: "5.1.4"
 ```
 
 ## Config
@@ -65,6 +69,9 @@ const baseConfig = {
     },
     logger: {
         level: 'DEBUG'
+    },
+    database: {
+        dialect: 'sqlite'
     }
 };
 ```
@@ -145,6 +152,111 @@ You can change the log level by updating the application config:
 }
 ```
 
+## Database
+The Core implements Sequelize as it's ORM for connecting to many SQL services.
+Here is a small list of all supported database engines:
+
+```text
+mysql
+postgres
+sqlite
+mariadb
+mssql
+db2
+snowflake
+oracle
+```
+
+By default, we utilize sqlite and the packages for that engine are installed by default.
+To switch engines and supply more configuration options to Sequelize, use the `database` object inside your `default.json` or `config.json`.
+
+> Sequelize configuration options can be found here: https://sequelize.org/api/v6/class/src/sequelize.js~sequelize#instance-constructor-constructor
+
+> Make sure when switching database engines you install the appropriate packages needed by Sequelize: https://sequelize.org/docs/v6/getting-started/#installing
+
+### Usage
+Below is some example code on how to initialize the database connection.
+After that we do a simple `COUNT` query on an example model (also provided in the example below).
+
+#### server.js
+```javascript
+/**
+ * Import vendor modules
+ */
+const {Runtime, db} = require('@neobeach/core');
+
+/**
+ * Import own modules
+ */
+const User = require('./models/User');
+
+/**
+ * Create a runtime/sandbox to start the server in
+ */
+Runtime(async () => {
+    await db.init([User]);
+    const userCount = await db.models.User.count();
+
+    console.log('userCount', userCount);
+});
+```
+
+#### User.js
+```javascript
+/**
+ * Import vendor modules
+ */
+const {DataTypes} = require('sequelize');
+
+/**
+ * Define the User model
+ *
+ * @param db
+ */
+module.exports = (db) => {
+    db.define('User', {
+        uuid: {
+            type: DataTypes.UUID,
+            defaultValue: DataTypes.UUIDV4,
+            primaryKey: true,
+            unique: true
+        },
+        email: {
+            type: DataTypes.STRING,
+            validate: {
+                isEmail: true,
+                notEmpty: true
+            }
+        },
+        firstName: {
+            type: DataTypes.STRING,
+            validate: {
+                notEmpty: true
+            }
+        },
+        lastName: {
+            type: DataTypes.STRING,
+            validate: {
+                notEmpty: true
+            }
+        },
+        fullName: {
+            type: DataTypes.VIRTUAL,
+            get() {
+                return `${this.firstName} ${this.lastName}`;
+            },
+            set() {
+                throw new Error('Do not try to set the `fullName` value!');
+            }
+        }
+    }, {
+        tableName: 'users'
+    });
+};
+```
+
+> More documentation on writing Sequelize models can be found here: https://sequelize.org/docs/v6/core-concepts/model-basics/
+
 ## Middlewares and Functions
 Below is an overview of all main Server/Core functions:
 ```javascript
@@ -192,6 +304,24 @@ An example of the response can be found here:
 ```
 
 > To ensure a fast response time, the healthcheck is initialized before any other middleware. This also keeps the logs free from clutter.
+
+## Upgrade Check
+The Core checks on every start of the server if an update is available on NPM.
+If an update is available you will encounter the following message:
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ You are running an outdated version of the @neobeach/core package, Please update soon !
+
+ Installed version: x.y.z
+ Available version: x.y.z
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Warning !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+```
+
+You can skip this check by specifying the following environment variable:
+```text
+SKIP_UPGRADE_CHECK=true
+```
 
 ## Example App
 ### server.js

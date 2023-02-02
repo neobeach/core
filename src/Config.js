@@ -25,7 +25,7 @@ const configDir = process.env.CONFIG_DIR || '/config/';
  * @author Glenn de Haan
  * @copyright MIT
  *
- * @type {{application: {node: number, port: number, host: string, env: boolean}, logger: {level: string}}}
+ * @type {{database: {dialect: string}, application: {node: number, port: number, host: string, env: boolean}, logger: {level: string}}}
  */
 const baseConfig = {
     application: {
@@ -36,6 +36,9 @@ const baseConfig = {
     },
     logger: {
         level: 'TRACE'
+    },
+    database: {
+        dialect: 'sqlite'
     }
 };
 
