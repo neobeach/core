@@ -1,13 +1,14 @@
 /**
  * Import vendor modules
  */
-const {Runtime, Server} = require('@neobeach/core');
+const {Runtime, Server, db} = require('@neobeach/core');
 const requestLogger = require('@neobeach/middlewares-request-logger');
 const oldBrowser = require('@neobeach/middlewares-old-browser');
 
 /**
  * Import own modules
  */
+const User = require('./models/User');
 const Api = require('./routers/Api');
 
 /**
@@ -33,7 +34,8 @@ const routers = [
 /**
  * Create a runtime/sandbox to start the server in
  */
-Runtime(() => {
+Runtime(async () => {
+    await db.init([User]);
     server.includeDefaultSecurityHeaders();
     server.includeDefaultCompression();
     server.includeDefaultBodyParsers();

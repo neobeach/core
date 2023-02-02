@@ -85,7 +85,7 @@ const preflight = async () => {
     }
 
     // Check if package updates are available after we know we have internet
-    if(internet) {
+    if(internet && !process.env.SKIP_UPGRADE_CHECK) {
         const core = await fetch('https://registry.npmjs.org/-/package/@neobeach/core/dist-tags');
 
         if(core.status === 200) {
