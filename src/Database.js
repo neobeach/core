@@ -38,7 +38,10 @@ const sequelize = new Sequelize({
  * @copyright MIT
  *
  * @param {array} models - An array that contains Sequelize models
- * @param {boolean} sync - Sync models to database on initialize
+ * @param {object} [associations] - An object mapping associations between models
+ * @param {array} [associations.oneToOne] - An array containing an array with oneToOne associations
+ * @param {array} [associations.oneToMany] - An array containing an array with oneToMany associations
+ * @param {boolean} [sync] - Sync models to database on initialize
  *
  * @see https://sequelize.org/docs/v6/core-concepts/model-basics/
  * @see https://sequelize.org/docs/v6/core-concepts/model-querying-basics/
@@ -55,7 +58,7 @@ const sequelize = new Sequelize({
  *    await db.init([User]);
  * });
  */
-const init = async (models = [], sync = true) => {
+const init = async (models = [], associations = {oneToOne: [], oneToMany: []}, sync = true) => {
     return new Promise(async (resolve) => {
         // Setup database connection
         await sequelize.authenticate().catch((e) => {
@@ -74,6 +77,28 @@ const init = async (models = [], sync = true) => {
         // Initialize models
         models.forEach((model) => {
             model(sequelize);
+        });
+
+        // Create associations
+        associations.oneToOne.forEach((association) => {
+            let options = {};
+
+            if(association[2]) {
+                options = association[2];
+            }
+
+            sequelize.models[association[0]].hasOne(sequelize.models[association[1]], options);
+            sequelize.models[association[1]].belongsTo(sequelize.models[association[0]], options);
+        });
+        associations.oneToMany.forEach((association) => {
+            let options = {};
+
+            if(association[2]) {
+                options = association[2];
+            }
+
+            sequelize.models[association[0]].hasMany(sequelize.models[association[1]], options);
+            sequelize.models[association[1]].belongsTo(sequelize.models[association[0]], options);
         });
 
         // Sync models to database
