@@ -103,7 +103,7 @@ const init = async (models = [], associations = {oneToOne: [], oneToMany: []}, s
 
         // Sync models to database
         if(sync) {
-            await sequelize.sync({alter: true}).catch((e) => {
+            await sequelize.sync({alter: {drop: false}}).catch((e) => {
                 Logger.error(e);
                 Logger.error('[DB] Unable to sync models!');
                 process.exit(1);
