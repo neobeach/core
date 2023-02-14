@@ -8,6 +8,7 @@ const oldBrowser = require('@neobeach/middlewares-old-browser');
 /**
  * Import own modules
  */
+const Group = require('./models/Group');
 const User = require('./models/User');
 const Api = require('./routers/Api');
 
@@ -35,7 +36,12 @@ const routers = [
  * Create a runtime/sandbox to start the server in
  */
 Runtime(async () => {
-    await db.init([User]);
+    await db.init([Group, User], {
+        oneToOne: [],
+        oneToMany: [
+            ['Group', 'User', {foreignKey: 'group'}]
+        ]
+    });
     server.includeDefaultSecurityHeaders();
     server.includeDefaultCompression();
     server.includeDefaultBodyParsers();
