@@ -210,6 +210,8 @@ class Server {
      * });
      */
     loadRouters(routers) {
+        Logger.info(`[SERVER] Loaded ${routers.length} router(s)`);
+
         routers.forEach(router => {
             if(router instanceof Router) {
                 // Get Routes from Router
@@ -237,7 +239,7 @@ class Server {
                     }
                 });
 
-                Logger.info(`[SERVER] Loaded ${routes.length} router(s)`);
+                Logger.info(`[SERVER] ${router.name}: Loaded ${routes.length} controller(s)`);
             } else {
                 console.error('Error at line:', router);
                 throw new Error(`Class is not an instance of '@neobeach/core/Router'!`);
