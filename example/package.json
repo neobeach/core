@@ -17,6 +17,6 @@
     "@neobeach/middlewares-request-logger": "2.0.0"
   },
   "devDependencies": {
-    "nodemon": "2.0.21"
+    "nodemon": "3.1.4"
   }
 }
