@@ -1,6 +1,6 @@
 {
   "name": "@neobeach/core",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "Base web framework based on the popular ExpressJS package",
   "main": "index.js",
   "author": "Glenn de Haan <glenn@dehaan.cloud>",
@@ -24,21 +24,21 @@
   },
   "dependencies": {
     "compression": "1.7.4",
-    "cookie-parser": "1.4.6",
+    "cookie-parser": "1.4.7",
     "cors": "2.8.5",
     "deepmerge": "4.3.1",
     "ejs": "3.1.10",
-    "express": "4.21.0",
-    "helmet": "7.1.0",
+    "express": "4.21.1",
+    "helmet": "8.0.0",
     "js-logger": "1.6.1",
     "multer": "1.4.5-lts.1",
     "node-fetch": "2.6.8",
-    "sequelize": "6.37.3",
+    "sequelize": "6.37.5",
     "sqlite3": "5.1.7"
   },
   "devDependencies": {
     "clean-jsdoc-theme": "4.3.0",
-    "jsdoc": "4.0.3",
+    "jsdoc": "4.0.4",
     "madge": "8.0.0",
     "rimraf": "6.0.1"
   }
