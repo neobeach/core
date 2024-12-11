@@ -1,6 +1,6 @@
 {
   "name": "@neobeach/core",
-  "version": "2.3.6",
+  "version": "2.3.7",
   "description": "Base web framework based on the popular ExpressJS package",
   "main": "index.js",
   "author": "Glenn de Haan <glenn@dehaan.cloud>",
@@ -23,12 +23,12 @@
     "docs": "jsdoc ./src --configure jsdoc.json --verbose"
   },
   "dependencies": {
-    "compression": "1.7.4",
+    "compression": "1.7.5",
     "cookie-parser": "1.4.7",
     "cors": "2.8.5",
     "deepmerge": "4.3.1",
     "ejs": "3.1.10",
-    "express": "4.21.1",
+    "express": "4.21.2",
     "helmet": "8.0.0",
     "js-logger": "1.6.1",
     "multer": "1.4.5-lts.1",
